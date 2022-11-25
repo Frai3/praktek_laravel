@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Toyota;
+use Illuminate\Support\Facades\File;
 
 class ToyotaController extends Controller
 {
@@ -15,8 +16,16 @@ class ToyotaController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->keyword;
-        $datas = Toyota::all();
-        return view('toyota.index', compact('datas'));
+        // $datas = Toyota::all();
+        
+        $datas = Toyota::where('namaMobil', 'LIKE', '%'.$keyword.'%')
+        ->orderBy('namaMobil','asc')
+        // ->orwhere('gelar', 'LIKE', '%'.$keyword.'%')
+        // ->orwhere('nip', 'LIKE', '%'.$keyword.'%')
+        ->paginate(3); //Menampilkan hanya 5 data di satu halaman
+        // $datas->withpath('pegawai');
+        // ->get(); //Jika tidak menggunakan paginate
+        return view('toyota.index', compact('datas', 'keyword'));
     }
 
     /**
@@ -76,8 +85,7 @@ class ToyotaController extends Controller
      */
     public function edit($id)
     {
-        $model = Toyota::find($id);
-        return view('toyota.edit', compact('model'));
+
     }
 
     /**
@@ -87,10 +95,26 @@ class ToyotaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $namaMobil)
+    public function update(Request $request, $id)
     {
         
-        dd($request->all());
+        $model = Toyota::find($id);
+        $model->namaMobil=$request->namaMobil;
+        $model->hargaBeli=$request->hargaBeli;
+        $model->hargaJual=$request->hargaJual;
+        $model->stok=$request->stok;
+
+        if($request->file('foto')){
+            $file = $request->file('foto');
+            $nama_file = time().str_replace(" ", "", $file->getClientOriginalName());
+            $file->move('foto', $nama_file);
+
+            File::delete('foto/'.$model->foto);
+            $model->foto = $nama_file;
+        }
+        $model->save();
+
+        return redirect('toyota')->with('success', 'Data berhasil diperbarui');
     }
 
     /**
@@ -101,6 +125,9 @@ class ToyotaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $model = Toyota::find($id);
+        File::delete('foto/'.$model->foto);
+        $model->delete();
+        return redirect('toyota');
     }
 }

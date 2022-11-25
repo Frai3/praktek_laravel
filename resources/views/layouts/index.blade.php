@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 </head>
 <body>
-    <div class="container">
+    <div class="container pt-5">
+        <h1 class="text-center">Data Barang</h1>
     @yield('content')
     </div>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
