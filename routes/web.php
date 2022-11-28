@@ -19,3 +19,4 @@ Route::get('/', function () {
 });
 
 Route::resource('toyota', ToyotaController::class);
+Route::put('toyota/{id}', 'ToyotaController@update');

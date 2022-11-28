@@ -85,7 +85,21 @@ class ToyotaController extends Controller
      */
     public function edit($id)
     {
+        $datas = Toyota::find($id);
+        $datas->namaMobil=$request->namaMobil;
+        $datas->hargaBeli=$request->hargaBeli;
+        $datas->hargaJual=$request->hargaJual;
+        $datas->stok=$request->stok;
 
+        if($request->file('foto')){
+            $file = $request->file('foto');
+            $nama_file = time().str_replace(" ", "", $file->getClientOriginalName());
+            $file->move('foto', $nama_file);
+
+            File::delete('foto/'.$datas->foto);
+            $datas->foto = $nama_file;
+        }
+        return dd($datas);
     }
 
     /**
@@ -128,6 +142,6 @@ class ToyotaController extends Controller
         $model = Toyota::find($id);
         File::delete('foto/'.$model->foto);
         $model->delete();
-        return redirect('toyota');
+        return redirect('toyota')->with('success', 'Data berhasil dihapus');
     }
 }

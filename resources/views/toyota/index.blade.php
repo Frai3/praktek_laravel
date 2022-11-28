@@ -14,7 +14,8 @@
             <a type="button" class="btn btn-primary" data-toggle="modal" data-target="#popupInsert">Tambah</a>
             <br /><br />
         </div>
-        <div class="col-5"></div>
+        <div class="col-5">
+        </div>
         <div class="col-4">
             <form action="{{ url('toyota') }}" method="GET">
                 <input type="text" name="keyword"/>
@@ -26,7 +27,6 @@
     <table class="table table-bordered">
         <thead class="thead-dark">
             <tr>
-                <th>ID</th>
                 <th>Foto Mobil</th>
                 <th>Nama Mobil</th>
                 <th>Harga Beli</th>
@@ -38,7 +38,6 @@
         <tbody>
             @foreach($datas as $key=>$value)
                 <tr>
-                    <td>{{$value->id}}</td>
                     <td>
                         <img src="{{ asset('foto/'.$value->foto) }}" alt="" width="250px">
                     </td>
@@ -47,13 +46,13 @@
                     <td>{{$value->hargaJual}}</td>
                     <td>{{$value->stok}}</td>
                     <td>
-                    <a type="button" class="btn btn-warning" data-toggle="modal" ata-toggle="modal" data-target="#popupEdit">Update</a>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#modalUpdateBarang{{ $value->id }}">Update</button>
                     </td>
                     <td>
                         <form action="{{ url('toyota/'.$value->id) }}" method="POST">
                             @csrf
                             <input type="hidden" name="_method" value="DELETE">
-                            <button class="btn btn-danger">Delete</button>
+                            <button onclick="return confirm('Are you sure?')" class="btn btn-danger">Delete</button>
                         </form>
                     </td>
                 </tr>
@@ -86,15 +85,19 @@
     </div>
 
     @foreach($datas as $key=>$value)
-    <div id="popupEdit" class="modal fade">
+    <div class="modal fade" id="modalUpdateBarang{{ $value->id }}" tabindex="-1" aria-labelledby="modalUpdateBarang" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Edit Data Kendaraan</h4>
+                    <h5 class="modal-title">Update Barang</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url('toyota/'.$value->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ url('toyota/'.$value->id) }}" method="post"  enctype="multipart/form-data">
                         @csrf
+                        @method('put')
                         <input type="hidden" name="_method" value="PATCH">
                         <br />
                         Nama Mobil : <input type="text" name="namaMobil" class="form-control" value="{{ $value->namaMobil }}"><br />
@@ -103,15 +106,12 @@
                         Stok : <input type="number" name="stok" class="form-control" value="{{ $value->stok }}"><br />
                         Foto : <input type="file" name="foto" class="form-control" value="{{ $value->foto }}"><br />
                         <img src="{{ asset('foto/'.$value->foto) }}" alt="" width="250px">
-                    <br />
-                    <br />
+                        <br />
+                        <br />
                         <button type="submit" class="btn btn-primary" >SIMPAN</button>
-                    <br />
-                    <br />
+                        <br />
+                        <br />
                     </form>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
                 </div>
             </div>
         </div>
