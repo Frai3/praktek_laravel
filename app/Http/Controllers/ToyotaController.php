@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Toyota;
 use Illuminate\Support\Facades\File;
-use App\Http\Controllers\Validator;
+// use App\Http\Controllers\Validator;
 
 class ToyotaController extends Controller
 {
