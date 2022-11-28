@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Toyota;
 use Illuminate\Support\Facades\File;
+use App\Http\Controllers\Validator;
 
 class ToyotaController extends Controller
 {
@@ -23,7 +24,6 @@ class ToyotaController extends Controller
         // ->orwhere('gelar', 'LIKE', '%'.$keyword.'%')
         // ->orwhere('nip', 'LIKE', '%'.$keyword.'%')
         ->paginate(3); //Menampilkan hanya 5 data di satu halaman
-        // $datas->withpath('pegawai');
         // ->get(); //Jika tidak menggunakan paginate
         return view('toyota.index', compact('datas', 'keyword'));
     }
@@ -119,6 +119,15 @@ class ToyotaController extends Controller
         $model->stok=$request->stok;
 
         if($request->file('foto')){
+            // $rules = array(
+            //     'upload' => 'required|max:200'
+            // );
+
+            // $validator = Validator::make($request->all(), $rules);
+            // if ($validator->fails()) {
+            //     return Redirect::to('toyota')->withErrors($validator)->withInput($request->all());
+            // }
+
             $file = $request->file('foto');
             $nama_file = time().str_replace(" ", "", $file->getClientOriginalName());
             $file->move('foto', $nama_file);
