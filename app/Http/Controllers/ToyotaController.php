@@ -57,13 +57,18 @@ class ToyotaController extends Controller
 
         if($request->file('foto')){
             $file = $request->file('foto');
+            $size_file = $file->getsize();
             $nama_file = time().str_replace(" ", "", $file->getClientOriginalName());
             $file->move('foto', $nama_file);
             $model->foto = $nama_file;
         }
-        $model->save();
-
-        return redirect('toyota')->with('success', 'Data berhasil disimpan');
+        
+        if($size_file < 100000){   
+            $model->save();
+            return redirect('toyota')->with('success', 'Data berhasil disimpan');
+        }else{
+            return redirect('toyota')->with('failed', 'Data gagal disimpan! Ukuran file terlalu besar (Max 100 Kb)');
+        }
     }
 
     /**
@@ -119,25 +124,30 @@ class ToyotaController extends Controller
         $model->stok=$request->stok;
 
         if($request->file('foto')){
-            // $rules = array(
-            //     'upload' => 'required|max:200'
-            // );
-
-            // $validator = Validator::make($request->all(), $rules);
-            // if ($validator->fails()) {
-            //     return Redirect::to('toyota')->withErrors($validator)->withInput($request->all());
-            // }
-
+        
             $file = $request->file('foto');
+            if(!empty($file)){
+                $size_file = $file->getsize();
+            }
             $nama_file = time().str_replace(" ", "", $file->getClientOriginalName());
             $file->move('foto', $nama_file);
 
-            File::delete('foto/'.$model->foto);
-            $model->foto = $nama_file;
         }
-        $model->save();
 
-        return redirect('toyota')->with('success', 'Data berhasil diperbarui');
+        if(!empty($file)){
+            // dd($size_file);
+            if($size_file < 100000 ){
+                File::delete('foto/'.$model->foto);
+                $model->foto = $nama_file;
+                $model->save();
+                return redirect('toyota')->with('success', 'Data berhasil diperbarui');
+            }else{
+                return redirect('toyota')->with('failed', 'Data gagal disimpan! Ukuran file terlalu besar (Max 100 Kb)');
+            }
+        }else{
+            $model->save();
+            return redirect('toyota')->with('success', 'Data berhasil diperbarui');
+        }
     }
 
     /**

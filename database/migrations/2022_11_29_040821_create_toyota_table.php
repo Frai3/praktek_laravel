@@ -14,6 +14,7 @@ class CreateToyotaTable extends Migration
     public function up()
     {
         Schema::create('toyota', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('namaMobil');
             $table->double('hargaBeli');
             $table->double('hargaJual');
