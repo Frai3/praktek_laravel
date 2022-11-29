@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Praktek Laravel || PT Nutech Integrasi</title>
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="icon" href="{{ asset('foto/Nutech.png') }}">
 </head>
 <body>
     <div class="container pt-5">

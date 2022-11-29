@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Toyota;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 // use App\Http\Controllers\Validator;
 
 class ToyotaController extends Controller
@@ -19,8 +20,8 @@ class ToyotaController extends Controller
         $keyword = $request->keyword;
         // $datas = Toyota::all();
         
-        $datas = Toyota::where('namaMobil', 'LIKE', '%'.$keyword.'%')
-        ->orderBy('namaMobil','asc')
+        $datas = Toyota::where('namamobil', 'LIKE', '%'.$keyword.'%')
+        ->orderBy('namamobil','asc')
         // ->orwhere('gelar', 'LIKE', '%'.$keyword.'%')
         // ->orwhere('nip', 'LIKE', '%'.$keyword.'%')
         ->paginate(3); //Menampilkan hanya 5 data di satu halaman
@@ -48,23 +49,33 @@ class ToyotaController extends Controller
     public function store(Request $request)
     {
 
-        // dd($request->all());
-        $model = new Toyota;
-        $model->namaMobil=$request->namaMobil;
-        $model->hargaBeli=$request->hargaBeli;
-        $model->hargaJual=$request->hargaJual;
-        $model->stok=$request->stok;
+        // // dd($request->all());
+        // //Jika tidak menggunakan function postgre
+        // $model = new Toyota;
+        // $model->namamobil=$request->namamobil;
+        // $model->hargabeli=$request->hargabeli;
+        // $model->hargajual=$request->hargajual;
+        // $model->stok=$request->stok;
+        
+        $namamobil=$request->namamobil;
+        $hargabeli=$request->hargabeli;
+        $hargajual=$request->hargajual;
+        $stok=$request->stok;
 
         if($request->file('foto')){
             $file = $request->file('foto');
             $size_file = $file->getsize();
             $nama_file = time().str_replace(" ", "", $file->getClientOriginalName());
-            $file->move('foto', $nama_file);
-            $model->foto = $nama_file;
+            // $model->foto = $nama_file;
         }
-        
-        if($size_file < 100000){   
-            $model->save();
+
+        // echo $namamobil;
+
+        if($size_file < 100000){
+            $all = DB::select("select public.insertcar('$namamobil', $hargabeli, $hargajual, $stok, '$nama_file')"); //Menggunakan function di postgre
+            $file->move('foto', $nama_file);
+            // $model->save(); //Jika tidak menggunakan function postgre
+            // dd($runQuery);
             return redirect('toyota')->with('success', 'Data berhasil disimpan');
         }else{
             return redirect('toyota')->with('failed', 'Data gagal disimpan! Ukuran file terlalu besar (Max 100 Kb)');
@@ -90,21 +101,7 @@ class ToyotaController extends Controller
      */
     public function edit($id)
     {
-        $datas = Toyota::find($id);
-        $datas->namaMobil=$request->namaMobil;
-        $datas->hargaBeli=$request->hargaBeli;
-        $datas->hargaJual=$request->hargaJual;
-        $datas->stok=$request->stok;
-
-        if($request->file('foto')){
-            $file = $request->file('foto');
-            $nama_file = time().str_replace(" ", "", $file->getClientOriginalName());
-            $file->move('foto', $nama_file);
-
-            File::delete('foto/'.$datas->foto);
-            $datas->foto = $nama_file;
-        }
-        return dd($datas);
+        //
     }
 
     /**
@@ -118,9 +115,9 @@ class ToyotaController extends Controller
     {
         
         $model = Toyota::find($id);
-        $model->namaMobil=$request->namaMobil;
-        $model->hargaBeli=$request->hargaBeli;
-        $model->hargaJual=$request->hargaJual;
+        $model->namamobil=$request->namamobil;
+        $model->hargabeli=$request->hargabeli;
+        $model->hargajual=$request->hargajual;
         $model->stok=$request->stok;
 
         if($request->file('foto')){

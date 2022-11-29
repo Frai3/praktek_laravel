@@ -43,9 +43,9 @@
                     <td>
                         <img src="{{ asset('foto/'.$value->foto) }}" alt="" width="250px">
                     </td>
-                    <td>{{$value->namaMobil}}</td>
-                    <td>{{$value->hargaBeli}}</td>
-                    <td>{{$value->hargaJual}}</td>
+                    <td>{{$value->namamobil}}</td>
+                    <td>{{$value->hargabeli}}</td>
+                    <td>{{$value->hargajual}}</td>
                     <td>{{$value->stok}}</td>
                     <td>
                     <button class="btn btn-primary" data-toggle="modal" data-target="#modalUpdateBarang{{ $value->id }}">Update</button>
@@ -71,9 +71,9 @@
                 <div class="modal-body">
                     <form action="{{ url('toyota') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        Nama Mobil : <input type="text" name="namaMobil" class="form-control"><br />
-                        Harga Beli : <input type="number" name="hargaBeli" class="form-control"><br />
-                        Harga Jual : <input type="number" name="hargaJual" class="form-control"><br />
+                        Nama Mobil : <input type="text" name="namamobil" class="form-control"><br />
+                        Harga Beli : <input type="number" name="hargabeli" class="form-control"><br />
+                        Harga Jual : <input type="number" name="hargajual" class="form-control"><br />
                         Stok : <input type="number" name="stok" class="form-control"><br />
                         Foto : <input type="file" name="foto" class="form-control"><br />
                         <button type="submit" class="btn btn-primary" >SIMPAN</button>
@@ -102,9 +102,9 @@
                         @method('put')
                         <input type="hidden" name="_method" value="PATCH">
                         <br />
-                        Nama Mobil : <input type="text" name="namaMobil" class="form-control" value="{{ $value->namaMobil }}"><br />
-                        Harga Beli : <input type="number" name="hargaBeli" class="form-control" value="{{ $value->hargaBeli }}"><br />
-                        Harga Jual : <input type="number" name="hargaJual" class="form-control" value="{{ $value->hargaJual }}"><br />
+                        Nama Mobil : <input type="text" name="namamobil" class="form-control" value="{{ $value->namamobil }}"><br />
+                        Harga Beli : <input type="number" name="hargabeli" class="form-control" value="{{ $value->hargabeli }}"><br />
+                        Harga Jual : <input type="number" name="hargajual" class="form-control" value="{{ $value->hargajual }}"><br />
                         Stok : <input type="number" name="stok" class="form-control" value="{{ $value->stok }}"><br />
                         Foto : <input type="file" name="foto" class="form-control" value="{{ $value->foto }}"><br />
                         <img src="{{ asset('foto/'.$value->foto) }}" alt="" width="250px">
